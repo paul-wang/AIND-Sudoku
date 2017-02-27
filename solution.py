@@ -1,4 +1,5 @@
 from itertools import groupby
+
 assignments = []
 
 
@@ -26,9 +27,6 @@ column_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC', 'DEF', 'GHI') for cs in ('123', '456', '789')]
 diag_units = [[rows[i] + c for i, c in enumerate(cols)], [rows[8 - i] + c for i, c in enumerate(cols)]]
 unitlist = row_units + column_units + square_units + diag_units
-
-
-
 
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s], [])) - set([s])) for s in boxes)
@@ -72,6 +70,16 @@ def display(values):
 
 
 def eliminate(values):
+    """Eliminate values from peers of each box with a single value.
+
+    Go through all the boxes, and whenever there is a box with a single value,
+    eliminate this value from the set of values of all its peers.
+
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        Resulting Sudoku in dictionary form after eliminating values.
+    """
     solved_values = [box for box in values.keys() if len(values[box]) == 1]
     for box in solved_values:
         digit = values[box]
@@ -82,6 +90,14 @@ def eliminate(values):
 
 
 def only_choice(values):
+    """Finalize all values that are the only choice for a unit.
+
+    Go through all the units, and whenever there is a unit with a value
+    that only fits in one box, assign the value to this box.
+
+    Input: Sudoku in dictionary form.
+    Output: Resulting Sudoku in dictionary form after filling in only choices.
+    """
     for unit in unitlist:
         for digit in '123456789':
             dplaces = [box for box in unit if digit in values[box]]
@@ -105,13 +121,14 @@ def naked_twins(values):
     # Eliminate the naked twins as possibilities for their peers
 
     for unit in unitlist:
-        value_box = [(values[box],box) for box in unit if len(values[box]) > 1]
-        value_boxes = [(key,list(elem for _, elem in group)) for key, group in groupby(value_box, lambda pair: pair[0])]
+        value_to_box = [(values[box], box) for box in unit if len(values[box]) > 1]
+        value_to_boxes = [(key, list(elem for _, elem in group)) for key, group in
+                          groupby(value_to_box, lambda pair: pair[0])]
 
-        nks = filter(lambda t: 1 < len(t[1]) == len(t[0]), value_boxes)
-        for nk in nks:    # nk:  23:[A2,A7]
+        nks = filter(lambda pair: 1 < len(pair[1]) == len(pair[0]), value_to_boxes)
+        for nk in nks:  # nk:  23:[A2,A7]
             for box in unit:
-                if len(values[box]) >= len(nk[0]) and box not in nk[1]:
+                if box not in nk[1] and len(values[box]) >= len(nk[0]):
                     for r in nk[0]:
                         assign_value(values, box, values[box].replace(r, ''))
     return values

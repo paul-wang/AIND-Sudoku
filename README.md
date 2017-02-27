@@ -3,11 +3,15 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+A: 
+* for each unit , find the possible naked twins 
+  * build a value-->[box1, box2,...] map for len(value)>1
+  * if len(value) == len([[box1, box2,...]]) , then, this is a naked twins
+* for all box in the unit but not naked twins, eliminate the naked twins value
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+A: add two diag_units [[A1,B2,C3,...,I9],[A9,B8,C7,...I1]] to unitlist
 
 ### Install
 
