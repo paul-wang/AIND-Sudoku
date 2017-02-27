@@ -15,7 +15,9 @@ def assign_value(values, box, value):
 
 
 def cross(A, B):
-    "Cross product of elements in A and elements in B."
+    """
+    Cross product of elements in A and elements in B.
+    """
     return [a + b for a in A for b in B]
 
 
@@ -34,13 +36,14 @@ peers = dict((s, set(sum(units[s], [])) - set([s])) for s in boxes)
 
 def grid_values(grid):
     """
-    Convert grid into a dict of {square: char} with '123456789' for empties.
+    Convert grid string into {<box>: <value>} dict with '.' value for empties.
+
     Args:
-        grid(string) - A grid in string form.
+        grid: Sudoku grid in string form, 81 characters long
     Returns:
-        A grid in dictionary form
-            Keys: The boxes, e.g., 'A1'
-            Values: The value in each box, e.g., '8'. If the box has no value, then the value will be '123456789'.
+        Sudoku grid in dictionary form:
+        - keys: Box labels, e.g. 'A1'
+        - values: Value in corresponding box, e.g. '8', or '.' if it is empty.
     """
     values = []
     all_digits = '123456789'
@@ -56,8 +59,11 @@ def grid_values(grid):
 def display(values):
     """
     Display the values as a 2-D grid.
+
     Args:
         values(dict): The sudoku in dictionary form
+    Returns:
+        None
     """
     width = 1 + max(len(values[s]) for s in boxes)
     line = '+'.join(['-' * (width * 3)] * 3)
@@ -70,13 +76,14 @@ def display(values):
 
 
 def eliminate(values):
-    """Eliminate values from peers of each box with a single value.
+    """
+    Eliminate values from peers of each box with a single value.
 
     Go through all the boxes, and whenever there is a box with a single value,
     eliminate this value from the set of values of all its peers.
 
     Args:
-        values: Sudoku in dictionary form.
+        values(dict): Sudoku in dictionary form.
     Returns:
         Resulting Sudoku in dictionary form after eliminating values.
     """
@@ -90,13 +97,16 @@ def eliminate(values):
 
 
 def only_choice(values):
-    """Finalize all values that are the only choice for a unit.
+    """
+    Finalize all values that are the only choice for a unit.
 
     Go through all the units, and whenever there is a unit with a value
     that only fits in one box, assign the value to this box.
 
-    Input: Sudoku in dictionary form.
-    Output: Resulting Sudoku in dictionary form after filling in only choices.
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        Resulting Sudoku in dictionary form after filling in only choices.
     """
     for unit in unitlist:
         for digit in '123456789':
@@ -109,7 +119,9 @@ def only_choice(values):
 
 
 def naked_twins(values):
-    """Eliminate values using the naked twins strategy.
+    """
+    Eliminate values using the naked twins strategy.
+
     Args:
         values(dict): a dictionary of the form {'box_name': '123456789', ...}
 
@@ -135,6 +147,16 @@ def naked_twins(values):
 
 
 def reduce_puzzle(values):
+    """
+    Iterate eliminate() and only_choice(). If at some point, there is a box with no available values, return False.
+    If the sudoku is solved, return the sudoku.
+    If after an iteration of both functions, the sudoku remains the same, return the sudoku.
+
+    Args:
+        values(dict): a dictionary of the form {'box_name': '123456789', ...}
+    Returns:
+        The dictionary representation of the final sudoku grid. False if no solution exists.
+    """
     stalled = False
     while not stalled:
         # Check how many boxes have a determined value
@@ -156,7 +178,14 @@ def reduce_puzzle(values):
 
 
 def search(values):
-    "Using depth-first search and propagation, try all possible values."
+    """
+    Using depth-first search and propagation, try all possible values.
+
+    Args:
+        values(dict): a dictionary of the form {'box_name': '123456789', ...}
+    Returns:
+        The dictionary representation of the final sudoku grid. False if no solution exists.
+    """
     # First, reduce the puzzle using the previous function
     values = reduce_puzzle(values)
     if values is False:

@@ -11,7 +11,9 @@ A:
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: add two diag_units [[A1,B2,C3,...,I9],[A9,B8,C7,...I1]] to unitlist
+A: To solve diagonal sudoku problem, we need to add two diagonal units ([[A1,B2,C3,...,I9],[A9,B8,C7,...I1]]) to the sudoku units. By doing this the diagonals box constraint are also added to the peers list. This constraint will be applied to all our strategies (e.g elimination, only choice, naked twins). 
+ For Example , in elimination strategy, we will also eliminate numbers in those diagonal peers. 
+ 
 
 ### Install
 
