@@ -3,11 +3,12 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: 
-* for each unit , find the possible naked twins 
-  * build a value-->[box1, box2,...] map for len(value)>1
+A: This strategy is very similar to eliminate strategy.  We build the strategy as follows 
+* for each unit , find the possible naked twins , aka. two boxes with identical two character values
+  * build a value-->[box1, box2,...] map for len(value)==2
   * if len(value) == len([[box1, box2,...]]) , then, this is a naked twins
-* for all box in the unit but not naked twins, eliminate the naked twins value
+* All other boxes in that unit are not allowed to contain either of the characters.  So for all box in the unit but not naked twins, eliminate the naked twins value. 
+We will put this strategy after only_choice. So we will apply eliminate-->only_choice-->naked_twins to reduce_puzzle until we solved the sudoku. 
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  

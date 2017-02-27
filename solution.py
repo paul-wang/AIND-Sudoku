@@ -133,15 +133,15 @@ def naked_twins(values):
     # Eliminate the naked twins as possibilities for their peers
 
     for unit in unitlist:
-        value_to_box = [(values[box], box) for box in unit if len(values[box]) > 1]
+        value_to_box = [(values[box], box) for box in unit if len(values[box]) == 2]
         value_to_boxes = [(key, list(elem for _, elem in group)) for key, group in
                           groupby(value_to_box, lambda pair: pair[0])]
 
-        nks = filter(lambda pair: 1 < len(pair[1]) == len(pair[0]), value_to_boxes)
-        for nk in nks:  # nk:  23:[A2,A7]
+        nts = filter(lambda pair: len(pair[1]) == len(pair[0]), value_to_boxes)
+        for nt in nts:  # nk:  23:[A2,A7]
             for box in unit:
-                if box not in nk[1] and len(values[box]) >= len(nk[0]):
-                    for r in nk[0]:
+                if box not in nt[1] and len(values[box]) >= len(nt[0]):
+                    for r in nt[0]:
                         assign_value(values, box, values[box].replace(r, ''))
     return values
 
