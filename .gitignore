@@ -1,0 +1,4 @@
+.DS_Store
+__pycache__
+objects/.DS_Store
+objects/__pycache__
